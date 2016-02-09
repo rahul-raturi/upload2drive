@@ -49,7 +49,6 @@ def main(files):
         else:
             response = handle.upload_data(path.abspath(fp), service)
             print("File uploaded successfully!")
-            print(response)
 
 if __name__ == '__main__':
     flags = argparse.ArgumentParser()
