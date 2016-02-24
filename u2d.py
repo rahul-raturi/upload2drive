@@ -19,7 +19,8 @@ class UploadData(object):
         self.credentials_path = path.join(self.config_dir, 'credentials.json')
 
     def print_progress(self, progress):
-        sys.stdout.write('\r[{0}>] {1}%'.format('='*(progress//5), progress))
+        unit = progress//5
+        sys.stdout.write('\r[{0}>{1}] [{2}]%'.format('='*unit, ' '*(20-unit), progress))
         sys.stdout.flush()
 
     def upload_data(self, file_path, service):
@@ -35,7 +36,7 @@ class UploadData(object):
                 status, t_response = request.next_chunk()
                 if status:
                     self.print_progress(int(status.progress()*100))     #Send progress in integer format
-            self.print_progress(100)                                         #Upload process completed successfully
+            self.print_progress(100)                                    #Upload process completed successfully
             print('\n')
             print('File uploaded successfully.')
 
