@@ -7,28 +7,27 @@ import oauth2client as ocli
 import httplib2
 import os
 import sys 
-from os import path
 import sys
 import argparse
 
 class UploadData(object):
 
     def __init__(self):
-        self.home_dir = path.expanduser('~')
-        self.config_dir = path.join(self.home_dir, '.config/upload2drive')
-        self.credentials_path = path.join(self.config_dir, 'credentials.json')
+        self.home_dir = os.path.expanduser('~')
+        self.config_dir = os.path.join(self.home_dir, '.config/upload2drive')
+        self.credentials_path = os.path.join(self.config_dir, 'credentials.json')
 
     def print_progress(self, progress):
         unit = progress//5
         sys.stdout.write('\r[{0}>{1}] [{2}]%'.format('='*unit, ' '*(20-unit), progress))
         sys.stdout.flush()
 
-    def upload_data(self, file_path, service):
-        filename=path.basename(file_path)
+    def upload_data(self, file_path, service, cur):
+        filename = os.path.basename(file_path)
         metadata = {'name': filename}
         media = MediaFileUpload(file_path, resumable=True, chunksize=262144)
         try:
-            print('Uploading File: ', filename)
+            print('\n>> Uploading File [{0}]: '.format(cur), filename)
             f_obj = service.files()
             request = f_obj.create(media_body=media, body=filename) 
             t_response = None
@@ -51,7 +50,27 @@ class UploadData(object):
             return None 
         return credentials 
 
-def main(files):
+
+def dirContents(fpath):
+    conts = os.listdir(fpath)
+    files = [os.path.join(os.path.abspath(fpath), cont) for cont in conts if not os.path.isdir(cont)]
+    return files
+
+def filesList(fpaths):
+    files = []
+    for fp in fpaths:
+        if not os.path.exists(fp):
+            print("This file/dir doesn't exists: ", os.path.abspath(fp), file=sys.stderr)
+        else:
+            if os.path.isdir(fp):
+                print("Adding directories contents: ", fp)
+                files.extend(dirContents(fp))
+            else:
+                files.append(os.path.abspath(fp))
+
+    return files
+
+def main(fpaths):
     handle = UploadData()
     credentials = handle.get_credentials() 
     if not credentials:
@@ -59,11 +78,10 @@ def main(files):
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
 
-    for fp in files:
-        if not os.path.exists(fp):
-            print("File does not exists: ", os.path.abspath(fp), file=sys.stderr)
-        else:
-            handle.upload_data(path.abspath(fp), service)
+    files = filesList(fpaths)
+    total = len(files)
+    for i, fp in enumerate(files, 1):
+        handle.upload_data(os.path.abspath(fp), service, str(i)+'/'+str(total))
 
 if __name__ == '__main__':
     flags = argparse.ArgumentParser()
