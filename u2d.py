@@ -29,7 +29,7 @@ class UploadData(object):
         try:
             print('\n>> Uploading File [{0}]: '.format(cur), filename)
             f_obj = service.files()
-            request = f_obj.create(media_body=media, body=filename) 
+            request = f_obj.create(media_body=media, body=metadata) 
             t_response = None
             while t_response is None:
                 status, t_response = request.next_chunk()
