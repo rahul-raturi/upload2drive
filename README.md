@@ -27,10 +27,14 @@ Using
 
 * First allow the script to access your drive. To do so type:
 
+```shell
 	$ python2 access_drive.py
+```
 
 * To upload [a] file[s], type:
 
+```shell
 	$ python2 u2d.py /home/user/file.txt another_file.txt
+```
 
 One can specify absolute or relative path for uploading the file.

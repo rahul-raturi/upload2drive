@@ -1,0 +1,42 @@
+<h1>Upload files to Google Drive from console</h1>
+
+<p>A python script to upload data to Drive from console without hassle.</p>
+
+<h2>Requirements</h2>
+
+<p>Check whether your system meets the following requirements before executing.</p>
+
+<ul>
+<li>python >= 2.7 (Not 3)</li>
+<li>Google's apiclient library for python.
+Here: https://developers.google.com/api-client-library/python/start/installation</li>
+<li>Your own client<em>secret key. Apparantly Google doesn't recommends sharing client</em>secret keys.
+Here's how to get the key: https://developers.google.com/api-client-library/python/guide/aaa_apikeys</li>
+</ul>
+
+<h2>Setting things up</h2>
+
+<ul>
+<li>Create a folder in <em>~/.config</em> with name upload2drive</li>
+<li>Put your client_secret.json in there.</li>
+</ul>
+
+<h2>Using</h2>
+
+<ul>
+<li>First allow the script to access your drive. To do so type:</li>
+</ul>
+
+<p><code>shell
+    $ python2 access_drive.py
+</code></p>
+
+<ul>
+<li>To upload [a] file[s], type:</li>
+</ul>
+
+<p><code>shell
+    $ python2 u2d.py /home/user/file.txt another_file.txt
+</code></p>
+
+<p>One can specify absolute or relative path for uploading the file.</p>
